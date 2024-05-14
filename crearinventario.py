@@ -3,6 +3,8 @@ import json
 from subprocess import PIPE,Popen
 from fabric import Connection
 from variables import ip_server,user_server
+ip_server = '192.168.1.2'
+user_server = 'root'
 
 inventario = '../proxmox_conf/ansible/inventario.ini'
 chdir('./terraform') #  Cambiamos al directorio de terraform
