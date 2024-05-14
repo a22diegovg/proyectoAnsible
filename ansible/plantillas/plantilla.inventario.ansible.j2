@@ -1,0 +1,24 @@
+[web]
+{% for ipw in ipsweb %}
+{{ ipw }}
+{% endfor %}
+
+[bd]
+{% for ipbd in ipsbd %}
+{{ ipbd }}
+{% endfor %}
+
+[balanceadorweb]
+{% for ipbw in ipsbw %}
+{{ ipbw }}
+{% endfor %}
+
+[balanceadorbd]
+{% for ipbbd in ipsbbd %}
+{{ ipbbd }}
+{% endfor %}
+
+[glusterfs]
+{% for ipg in ipsg %}
+{{ ipg }}
+{% endfor %}

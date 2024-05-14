@@ -1,0 +1,15 @@
+- name: Copiar archivo de galera
+  hosts: ipsBD
+  tasks:
+    - name: Copiar archivo de Galera
+      ansible.builtin.template:
+        src: roles/mariadb/templates/60-galera.cnf.j2
+        dest: /etc/mysql/mariadb.conf.d/60-galera.cnf
+        
+- name: Inicio de mariadb
+  hosts: ipsBD:!10.0.1.10
+  tasks:
+    - name: Reinicio mariadb
+      service:
+        name: mariadb
+        state: restarted

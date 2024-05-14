@@ -1,0 +1,27 @@
+- name: parada_mariadb
+  ansible.builtin.service:
+    name: mariadb
+    state: stopped
+
+- name: Copiar archivo de Galera
+  ansible.builtin.template:
+    src: roles/mariadb/templates/60-galera.cnf.j2
+    dest: /etc/mysql/mariadb.conf.d/60-galera.cnf
+
+- name: Galera Cluster
+  hosts: 10.0.1.10
+  tasks:
+    - name: Iniciar Galera Cluster
+      command: galera_new_cluster
+    - name: Iniciar Mariadb en 10.0.1.10
+      service:
+        name: mariadb
+        state: started
+        
+- name: Iniciar Mariadb
+  hosts: ipsBD:!10.0.1.10
+  tasks:
+    - name: Inicio de mariadb
+      service:
+        name: mariadb
+        state: started

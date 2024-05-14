@@ -1,0 +1,20 @@
+---
+- name: Configurar servidores web
+  hosts: ipsWEB
+  remote_user: root
+  roles:
+    - apache
+
+- name: Configurar balanceador web
+  hosts: ipsbcw
+  remote_user: root
+  roles:
+    - bcweb
+
+- name: Configurar bases de datos
+  hosts: ipsBD
+  remote_user: root
+  roles:
+    - mariadb
+
+

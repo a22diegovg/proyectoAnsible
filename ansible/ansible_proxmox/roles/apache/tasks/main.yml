@@ -1,0 +1,41 @@
+---
+# tasks file for apache
+- name: Instalar Apache2.4
+  ansible.builtin.apt:
+    name: apache2
+    state: present
+    update_cache: yes
+
+- name: Instalar php
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop:
+  - libapache2-mod-php
+  - php-mysql
+  
+#- name: Configurar tmpPrivateapache
+#  command: sed -i -e 's,PrivateTmp=true,PrivateTmp=false\nNoNewPrivileges=yes,g' /lib/systemd/system/apache2.service
+
+#- name: Refresacamos demonio
+#  command: systemctl daemon-reload
+
+- name: Copiar virtualhost
+  ansible.builtin.copy:
+    src: sitio.conf
+    dest: /etc/apache2/sites-available/sitio.conf
+
+- name: Copiar contenido web
+  ansible.builtin.copy:
+    src: index.php
+    dest: /var/www/html/index.php
+    
+- name: Comprobar si el sitio esta habilitado
+  stat:
+    path: /etc/apache2/sites-enabled/sitio.conf
+  register: sitio_habilitado
+
+- name: Habilitar sitio de apache2
+  command: a2ensite sitio.conf
+  notify: reinicio_apache2
+  when: not sitio_habilitado.stat.exists

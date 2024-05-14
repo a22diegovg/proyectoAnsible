@@ -1,0 +1,24 @@
+variable "user" {
+  type    = string
+  default = "{{ usuario_terraform }}"
+}
+variable "password" {
+  type    = string
+  default = "{{ contra_terraform }}"
+}
+variable "servidor" {
+  type    = string
+  default = "https://{{ ansible_host }}:8006/api2/json"
+}
+variable "key_public_ansible" {
+  type = string
+  default = "{{ ssh_key.public_key }}"
+}
+variable "nodo01" {
+  type = string
+  default = "{{ nodo01 }}"
+}
+variable "ubuntu22" {
+  type = string
+  default = "{{ ubuntu }}"
+}

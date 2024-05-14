@@ -1,0 +1,36 @@
+---
+# tasks file for mariadb
+- name: Instalar Mariadb
+  ansible.builtin.apt:
+    name: mariadb-server
+    state: present
+    update_cache: yes
+
+- name: parada_mariadb
+  ansible.builtin.service:
+    name: mariadb
+    state: stopped
+
+- name: Copiar archivo de Galera
+  ansible.builtin.template:
+    src: roles/mariadb/templates/60-galera.cnf.j2
+    dest: /etc/mysql/mariadb.conf.d/60-galera.cnf
+
+- name: Iniciar Galera Cluster en {{ master }}
+  command: galera_new_cluster
+  when: ansible_host ==  master 
+
+- name: Iniciar Mariadb en {{ master }}
+  service:
+    name: mariadb
+    state: started
+  when: ansible_host == master     
+
+- name: Iniciar Mariadb
+  service:
+    name: mariadb
+    state: started
+  when: ansible_host != master
+
+
+  

@@ -1,0 +1,91 @@
+- name:
+  hosts: proxmox
+  remote_user: root
+  vars:
+    contra_terraform: abc123.
+    usuario_terraform: terraform_user@pve
+    plantillaLXC_22: "ubuntu-22.04-standard_22.04-1_amd64.tar.zst"
+    ubuntu: "local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst"
+    nodo01: "pve"
+    ruta: "~/Documents/proyecto02/"
+
+  tasks:
+    - name: Copiamos todos los archivos de ansible del Proxmox
+      ansible.posix.synchronize:
+        src: ansible_proxmox
+        dest: /root
+
+    - name: Copiamos los archivos de configuracion
+      ansible.posix.synchronize:
+        src: conf
+        dest: /root
+
+    - name: Copiamos las redes del Proxmox
+      ansible.builtin.copy:
+        src: files/redes-proxmox
+        dest: /etc/network/interfaces.d/redes-proxmox
+      notify: reinicio_networking
+
+    - name: Activamos el enrutamiento
+      ansible.builtin.copy:
+        src: files/sysctl.conf
+        dest: /etc/sysctl.conf
+      notify: reinicio_networking
+
+    - name: Eliminamos los repositior de pve-enterprise y ceph
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/apt/sources.list.d/pve-enterprise.list
+        - /etc/apt/sources.list.d/ceph.list
+
+    - name: Instalamos iptables-persistent, python3, python3-jinja2, software-properties-common
+      ansible.builtin.apt:
+        name:
+          - iptables-persistent
+          - python3
+          - ansible
+          - python3-jinja2
+          - software-properties-common
+        state: present
+        update_cache: yes
+        
+    - name: Ejecutamos las iptables
+      ansible.builtin.command: /root/conf/iptables.sh
+
+    - name: Descargamos plantilla para Proxmox
+      ansible.builtin.command: pveam download local "{{ plantillaLXC_22 }}"
+      ignore_errors: yes
+
+    - name: Usuario de terraform
+      ansible.builtin.command: "{{ item }}" 
+      loop:
+       - /sbin/pveum role add TerraformProv -privs "Datastore.AllocateSpace Datastore.Audit Pool.Allocate Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt SDN.Use"
+       - /sbin/pveum user add {{ usuario_terraform }} --password {{ contra_terraform }}
+       - /sbin/pveum aclmod / -user {{ usuario_terraform }} -role TerraformProv
+      ignore_errors: yes
+
+    - name: Generamos claves SSH
+      community.crypto.openssh_keypair:
+        path: /root/.ssh/ansible_key
+        comment: Clave Ansible
+      register: ssh_key
+
+    - name: Creamos el archivo de variables para Terraform
+      ansible.builtin.template:
+        src: plantillas/plantilla.var.terraform.j2
+        dest: vars_terraform.tf
+        
+    - name: Traemos de vuelta el archivo de las variables
+      ansible.builtin.fetch:
+        src: /root/vars_terraform.tf
+        dest: "{{ruta}}terraform/vars_terraform.tf"  
+        flat: yes
+        
+  handlers:
+    - name: reinicio_networking
+      ansible.builtin.service:
+        name: networking.service
+        state: restarted
+        
