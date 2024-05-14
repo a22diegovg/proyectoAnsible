@@ -1,9 +1,9 @@
 #!/bin/bash
 #  Configuramos las variables de iptables
-#ipProxmox='192.168.1.2'
-#ipBalanceadorWEB='10.0.0.50'
-cd ~/conf/
-source variables.sh
+ipProxmox='192.168.1.2'
+ipBalanceadorWEB='10.0.0.50'
+#cd ~/conf/
+#source variables.sh
 #/bin/echo "[CONFIGURACIÓN DE IPTABLES]"
 #  Configuramos el NAT
 netfilter-persistent flush

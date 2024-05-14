@@ -17,8 +17,8 @@
 
     - name: Copiamos los archivos de configuracion
       ansible.posix.synchronize:
-        src: conf
-        dest: /root
+        src: files/iptables.sh
+        dest: /root/iptables.sh
 
     - name: Copiamos las redes del Proxmox
       ansible.builtin.copy:
