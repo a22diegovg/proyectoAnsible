@@ -2,10 +2,10 @@ variable "user" {
   type    = string
   default = "{{ usuario_terraform }}"
 }
-variable "password" {
-  type    = string
-  default = "{{ contra_terraform }}"
-}
+# variable "password" {
+#   type    = string
+#   default = "{{ contra_terraform }}"
+# }
 variable "servidor" {
   type    = string
   default = "https://{{ ansible_host }}:8006/api2/json"
