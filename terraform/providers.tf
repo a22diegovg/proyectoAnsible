@@ -9,5 +9,5 @@ terraform {
 provider "proxmox" {
   pm_api_url = var.servidor
   pm_user = var.user
-  #pm_password = var.password
+  pm_password = var.password
 }

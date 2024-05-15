@@ -2,10 +2,10 @@ variable "user" {
   type    = string
   default = "terraform_user@pve"
 }
-# variable "password" {
-#   type    = string
-#   default = "abc123."
-# }
+variable "password" {
+  type    = string
+  default = "abc123."
+}
 variable "servidor" {
   type    = string
   default = "https://192.168.1.2:8006/api2/json"
