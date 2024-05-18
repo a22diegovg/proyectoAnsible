@@ -1,4 +1,25 @@
 ---
+- name: Sincronizar la hora
+  hosts: all
+  remote_user: root
+  tasks:
+  - name: Instalar ntp
+    ansible.builtin.apt:
+      name: ntp
+      state: present
+      
+  - name: Configurar ntp
+    ansible.builtin.copy:
+      src: ntp.conf
+      dest: /etc/ntp.conf
+    notify: reinicio_ntp
+
+  handlers:
+    - name: reinicio_ntp
+      ansible.builtin.service:
+        name: ntp
+        status: restarted
+
 - name: Configurar servidores web
   hosts: ipsWEB
   remote_user: root
@@ -16,5 +37,11 @@
   remote_user: root
   roles:
     - mariadb
+
+- name: Configurar balanceador de bases de datos
+  remote_user: root
+  hosts: ipsbcbd
+  roles:
+    - bcbd
 
 

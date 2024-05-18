@@ -12,18 +12,25 @@
     state: present
   loop:
   - libapache2-mod-php
-  - php-mysql
+  - php-mysqli
+  notify: reinicio_apache2
   
 #- name: Configurar tmpPrivateapache
 #  command: sed -i -e 's,PrivateTmp=true,PrivateTmp=false\nNoNewPrivileges=yes,g' /lib/systemd/system/apache2.service
 
 #- name: Refresacamos demonio
 #  command: systemctl daemon-reload
+- name: Copiar php.ini
+  ansible.builtin.copy:
+    src: php.ini
+    dest: /etc/php/8.1/apache2/php.ini
+  notify: reinicio_apache2
 
 - name: Copiar virtualhost
   ansible.builtin.copy:
     src: sitio.conf
     dest: /etc/apache2/sites-available/sitio.conf
+  notify: reinicio_apache2
 
 - name: Copiar contenido web
   ansible.builtin.copy:

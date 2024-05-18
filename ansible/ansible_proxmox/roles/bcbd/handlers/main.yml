@@ -1,0 +1,6 @@
+---
+# handlers file for bcbd
+- name: reinicio_haproxy
+  ansible.builtin.service:
+    name: haproxy
+    state: restarted

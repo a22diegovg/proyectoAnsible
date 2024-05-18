@@ -1,5 +1,7 @@
 - name: parada_mariadb
   hosts: ipsBD
+  vars:
+    master: 10.0.0.10
   tasks:
     - name: Parar Mariadb 
       ansible.builtin.service:
@@ -11,20 +13,36 @@
         src: roles/mariadb/templates/60-galera.cnf.j2
         dest: /etc/mysql/mariadb.conf.d/60-galera.cnf
 
-- name: Galera Cluster
-  hosts: 10.0.1.10
-  tasks:
-    - name: Iniciar Galera Cluster
+    - name: Iniciar Galera Cluster en {{ master }}
       command: galera_new_cluster
-    - name: Iniciar Mariadb en 10.0.1.10
+      when: ansible_host ==  master 
+
+    - name: Iniciar Mariadb en {{ master }}
       service:
         name: mariadb
         state: started
+      when: ansible_host == master     
+
+    - name: Iniciar Mariadb
+      service:
+        name: mariadb
+        state: started
+      when: ansible_host != master
+
+# - name: Galera Cluster
+#   hosts: 10.0.1.10
+#   tasks:
+#     - name: Iniciar Galera Cluster
+#       command: galera_new_cluster
+#     - name: Iniciar Mariadb en 10.0.1.10
+#       service:
+#         name: mariadb
+#         state: started
         
-- name: Iniciar Mariadb
-  hosts: ipsBD:!10.0.1.10
-  tasks:
-    - name: Inicio de mariadb
-      service:
-        name: mariadb
-        state: started
+# - name: Iniciar Mariadb
+#   hosts: ipsBD:!10.0.1.10
+#   tasks:
+#     - name: Inicio de mariadb
+#       service:
+#         name: mariadb
+#         state: started

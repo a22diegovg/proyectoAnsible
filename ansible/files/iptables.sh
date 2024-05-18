@@ -1,7 +1,7 @@
 #!/bin/bash
 #  Configuramos las variables de iptables
 ipProxmox='192.168.1.2'
-ipBalanceadorWEB='10.0.0.50'
+ipBalanceadorWEB='10.0.0.200'
 #  Configuramos el NAT
 netfilter-persistent flush
 iptables -t nat -A POSTROUTING -o vmbr0 -j SNAT --to-source $ipProxmox
