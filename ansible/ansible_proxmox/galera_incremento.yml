@@ -9,7 +9,25 @@
 - name: Inicio de mariadb
   hosts: ipsBD:!10.0.1.10
   tasks:
+    - name: Apagado de mariadb
+      service:
+        name: mariadb
+        status: stopped
+
     - name: Reinicio mariadb
       service:
         name: mariadb
-        state: restarted
+        state: started
+
+- name: Inicio de mariadb
+  hosts: ipsBD:10.0.1.10
+  tasks:
+    - name: Apagado de mariadb
+      service:
+        name: mariadb
+        status: stopped
+
+    - name: Reinicio mariadb
+      service:
+        name: mariadb
+        state: started

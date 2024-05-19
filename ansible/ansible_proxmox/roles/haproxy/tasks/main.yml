@@ -1,0 +1,13 @@
+---
+# tasks file for bcbd
+- name: Instalar HaProxy
+  ansible.builtin.apt:
+    name: haproxy
+    state: present
+    update_cache: yes
+    
+- name: Copiar archivo de configuracion
+  ansible.builtin.template:
+    src: templates/haproxy.cfg
+    dest: /etc/haproxy/haproxy.cfg
+  notify: reinicio_haproxy

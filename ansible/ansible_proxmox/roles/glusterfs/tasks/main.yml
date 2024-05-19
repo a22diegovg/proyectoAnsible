@@ -1,0 +1,39 @@
+---
+# tasks file for glusterfs
+- name: Instalamos glusterfs
+  apt:
+    name: glusterfs-server
+    state: present
+
+- name: Iniciar y habilitar el servicio GlusterFS
+  service:
+    name: glusterd
+    state: started
+    enabled: true
+
+- name: Creamos el grupo de confianza
+  gluster.gluster.gluster_peer:
+    state: present
+    nodes: "{{ ansible_play_hosts }}"
+
+- name: Creamos la ubicacion del volumen
+  file:
+    path: /gfs/brick1
+    state: directory
+    recurse: yes
+
+- name: Creamos un volumen gluster
+  gluster.gluster.gluster_volume:
+    state: present
+    name: vol_gfs
+    bricks: /gfs/brick1
+    replicas: "{{ ansible_play_hosts | length }}"
+    cluster: "{{ ansible_play_hosts }}"
+    force: yes
+  run_once: true
+  
+  
+- name: start gluster volume
+  gluster.gluster.gluster_volume:
+    state: started
+    name: vol_gfs

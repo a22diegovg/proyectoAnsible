@@ -30,7 +30,7 @@
   hosts: ipsbcw
   remote_user: root
   roles:
-    - bcweb
+    - haproxy
 
 - name: Configurar bases de datos
   hosts: ipsBD
@@ -41,7 +41,18 @@
 - name: Configurar balanceador de bases de datos
   remote_user: root
   hosts: ipsbcbd
+  vars:
+    puerto: 3306
+    modo: tcp
+    opcion: tcplog
+    grupo: ipsBD
   roles:
-    - bcbd
+    - haproxy
+
+- name: Configurar GlusterFS
+  hosts: ipsGFS
+  remote_user: root
+  roles:
+    - glusterfs
 
 

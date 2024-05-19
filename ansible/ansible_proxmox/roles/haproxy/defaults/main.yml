@@ -1,0 +1,5 @@
+---
+# defaults file for bcbd
+puerto: 80
+modo: http
+grupo: ipsWEB

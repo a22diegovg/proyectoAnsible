@@ -1,0 +1,30 @@
+- name: Buscar nodo con -> safe_to_bootstrap en 1 | Archivo -> grastate.dat
+  hosts: ipsBD
+  tasks:
+    - name: Apagar todos mariadb 
+      service:
+        name: mariadb
+        state: stopped
+
+    - name: Hacer que grep busque en grastate.dat si safe_to_bootstrap esta en 1
+      shell: "grep -q 'safe_to_bootstrap: 1' /var/lib/mysql/grastate.dat"
+      register: grastate_1
+      changed_when: false  # Evitar que se marque como cambiado
+      ignore_errors: yes
+
+    - name: Crear nuevo cluster de Galera
+      shell: galera_new_cluster
+      when: grastate_1.rc == 0  
+    
+    - name: Iniciar equipo con el safe_to_bootstrap a 1
+      service:
+        name: mariadb
+        state: started
+      when: grastate_1.rc == 0 
+    
+    - name: Iniciamos el resto de equipos del cluster
+      service:
+        name: mariadb
+        state: started
+      when: grastate_1.rc != 0 
+
