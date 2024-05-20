@@ -1,0 +1,17 @@
+- name: Cliente Gluster
+  hosts: ipsGFS
+  tasks:
+    - name: Instalar fuse y habilitarlo
+      apt:
+        name: fuse
+        state: present
+
+    - name: Hacer algo para fuse funcione
+      command: mknod -m 666 /dev/fuse c 10 229
+      ignore_errors: yes
+      
+    - name: Habiliar fuse
+      modprobe:
+        name: fuse
+        state: present
+      ignore_errors: yes

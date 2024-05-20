@@ -4,6 +4,7 @@
   apt:
     name: glusterfs-server
     state: present
+    update_cache: yes
 
 - name: Iniciar y habilitar el servicio GlusterFS
   service:
@@ -37,3 +38,4 @@
   gluster.gluster.gluster_volume:
     state: started
     name: vol_gfs
+

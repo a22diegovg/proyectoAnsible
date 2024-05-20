@@ -42,10 +42,13 @@
   remote_user: root
   hosts: ipsbcbd
   vars:
-    puerto: 3306
+    puerto1: 3306
+    grupo1: ipsBD
+    puerto2: 24007
+    grupo2: ipsGFS
     modo: tcp
     opcion: tcplog
-    grupo: ipsBD
+    
   roles:
     - haproxy
 

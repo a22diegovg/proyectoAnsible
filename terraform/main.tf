@@ -115,6 +115,7 @@ resource "proxmox_lxc" "gfs" {
   #password = "abc123."
   onboot = true 
   unprivileged = false
+  
   #  Configuramos el almacenamiento interno de cada servidor
   rootfs {
     size    = "5G"
