@@ -7,6 +7,7 @@
     ansible.builtin.apt:
       name: ntp
       state: present
+    update_cache: yes
       
   - name: Configurar ntp
     ansible.builtin.copy:
@@ -18,7 +19,7 @@
     - name: reinicio_ntp
       ansible.builtin.service:
         name: ntp
-        status: restarted
+        state: restarted
 
 - name: Configurar servidores web
   hosts: ipsWEB
@@ -48,7 +49,6 @@
     grupo2: ipsGFS
     modo: tcp
     opcion: tcplog
-    
   roles:
     - haproxy
 

@@ -2,7 +2,7 @@
 # -----------------------------------------------------------------------------------------------------------------------------------------
 #  Configuración de los servidores web
 resource "proxmox_lxc" "web" {
-  count           = 2 #  Indicamos el numero de contenedores que queremos crear
+  count           = 3 #  Indicamos el numero de contenedores que queremos crear
   target_node     = var.nodo01 #  Indicamos el nombre del nodo en el que se van a instalar los contenedores
   ssh_public_keys = var.key_public_ansible #  Clave ssh que nos permitirá conectarnos al host.
   hostname        = "web-${count.index}" #  Le ponemos un nombre, que cambiará en función de numero de contenedores que se cree
@@ -81,7 +81,7 @@ resource "proxmox_lxc" "balanceadorBD" {
 # -----------------------------------------------------------------------------------------------------------------------------------------
 #  Configuración de las bases de datos
 resource "proxmox_lxc" "bd" {
-  count           = 2                                                    
+  count           = 3                                                    
   target_node     = var.nodo01                                                                                     
   ssh_public_keys = var.key_public_ansible
   hostname        = "bd-${count.index}"                                   
@@ -106,7 +106,7 @@ resource "proxmox_lxc" "bd" {
 # -----------------------------------------------------------------------------------------------------------------------------------------
 #  Configuracion de los servidores GlusterFS
 resource "proxmox_lxc" "gfs" {
-  count           = 3                                                      
+  count           = 4                                                      
   target_node     = var.nodo01                                                                                      
   ssh_public_keys = var.key_public_ansible
   hostname        = "gfs-${count.index}"                                   

@@ -37,7 +37,7 @@ with open(inventario, 'w') as f:
 
 # Conectar al servidor y transferir el archivo de inventario
 c = Connection(host=ip_server, user=user_server)
-c.put(inventario, f'/root/ansible_proxmox/')
+c.put(inventario, f'/etc/ansible/')
 
 print("Inventario generado correctamente.")
 

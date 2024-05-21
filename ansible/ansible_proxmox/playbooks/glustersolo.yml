@@ -1,0 +1,33 @@
+- name: Cliente Gluster
+  hosts: ipsGFS ipsBD
+  tasks:
+    - name: Instalar fuse y habilitarlo
+      apt:
+        name: fuse
+        state: present
+
+    - name: Instalar cliente gluster
+      apt:
+        name: glusterfs-client
+        state: present
+    - name: Hacer algo para fuse funcione
+      command: mknod -m 666 /dev/fuse c 10 229
+      ignore_errors: yes
+      
+    # - name: Habiliar fuse
+    #   modprobe:
+    #     name: fuse
+    #     state: present
+    #   ignore_errors: yes
+
+    - name: Crear carpeta de montaje
+      file:
+        path: /mnt/gluster
+        state: directory
+
+    - name: Montar el FS
+      mount:
+        path: /mnt/gluster
+        src: 10.0.1.200:/vol_gfs
+        fstype: glusterfs
+        state: mounted

@@ -10,29 +10,30 @@
     ruta: "~/proyectoAnsible/"
 
   tasks:
-    - name: Copiamos todos los archivos de ansible del Proxmox
-      ansible.posix.synchronize:
-        src: ansible_proxmox
-        dest: /root
-
-    - name: Copiamos los archivos de configuracion
-      ansible.posix.synchronize:
-        src: files/iptables.sh
-        dest: /root/iptables.sh
-
-    - name: Copiamos las redes del Proxmox
+    - name: Copiamos los archivos de ansible al servidor Proxmox
       ansible.builtin.copy:
-        src: files/redes-proxmox
+        src: ansible_proxmox/
+        dest: /etc/ansible
+
+    - name: Copiamos los archivos de configuracion de iptables
+      ansible.builtin.copy:
+        src: iptables.sh
+        dest: /root/iptables.sh
+        mode: 700
+
+    - name: Copiamos el archivo de redes de Proxmox
+      ansible.builtin.copy:
+        src: redes-proxmox
         dest: /etc/network/interfaces.d/redes-proxmox
       notify: reinicio_networking
 
     - name: Activamos el enrutamiento
       ansible.builtin.copy:
-        src: files/sysctl.conf
+        src: sysctl.conf
         dest: /etc/sysctl.conf
       notify: reinicio_networking
 
-    - name: Eliminamos los repositior de pve-enterprise y ceph
+    - name: Eliminamos los repositorios de pve-enterprise y ceph
       ansible.builtin.file:
         path: "{{ item }}"
         state: absent
@@ -51,14 +52,14 @@
         state: present
         update_cache: yes
         
-    - name: Ejecutamos las iptables
+    - name: Ejecutamos el script de iptables
       ansible.builtin.command: /root/iptables.sh
 
-    - name: Descargamos plantilla para Proxmox
+    - name: Descargamos plantilla para los contenedores LXC
       ansible.builtin.command: pveam download local "{{ plantillaLXC_22 }}"
       ignore_errors: yes
 
-    - name: Usuario de terraform
+    - name: Creación del usuario para Terrafor
       ansible.builtin.command: "{{ item }}" 
       loop:
        - /sbin/pveum role add TerraformProv -privs "Datastore.AllocateSpace Datastore.Audit Pool.Allocate Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt SDN.Use"
@@ -66,7 +67,7 @@
        - /sbin/pveum aclmod / -user {{ usuario_terraform }} -role TerraformProv
       ignore_errors: yes
 
-    - name: Generamos claves SSH
+    - name: Generamos claves SSH para usar en los contenedores LXC
       community.crypto.openssh_keypair:
         path: /root/.ssh/ansible_key
         comment: Clave Ansible
@@ -77,12 +78,13 @@
         src: plantillas/plantilla.var.terraform.j2
         dest: vars_terraform.tf
         
-    - name: Traemos de vuelta el archivo de las variables
+    - name: Recuperamos el archivo de variables de Terraform
       ansible.builtin.fetch:
         src: /root/vars_terraform.tf
         dest: "{{ruta}}terraform/vars_terraform.tf"  
         flat: yes
-    - name: Eliminamos las variables de terraform de Proxmox
+
+    - name: Eliminamos el archivo de variables de Terraform del servidor Proxmox
       ansible.builtin.file:
         path: "/root/vars_terraform.tf"
         state: absent

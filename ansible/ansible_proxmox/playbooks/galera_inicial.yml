@@ -1,7 +1,7 @@
 - name: parada_mariadb
   hosts: ipsBD
   vars:
-    master: 10.0.0.10
+    master: 10.0.1.10
   tasks:
     - name: Parar Mariadb 
       ansible.builtin.service:

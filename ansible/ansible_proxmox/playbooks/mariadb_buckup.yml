@@ -1,0 +1,25 @@
+- name: Copiar archivo de galera
+  hosts: ipsBD
+  tasks:
+    - name: Instalar pymsql
+      apt:
+        name: python3-pymysql
+        state: present
+
+    - name: Creamos usuario
+      mysql_user:
+        name: ansible
+        password: abc123.
+        priv: 'galera.*:ALL,GRANT'
+        state: present
+        login_user: root
+        login_password: abc123.
+      run_once: true
+
+    - name: Copia de seguridad
+      mysql_db:
+        state: dump
+        name: galera
+        target: /mnt/gluster/copiaseguridad.sql
+        login_password: abc123.
+        login_user: ansible

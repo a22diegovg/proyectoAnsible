@@ -15,7 +15,8 @@
 - name: Creamos el grupo de confianza
   gluster.gluster.gluster_peer:
     state: present
-    nodes: "{{ ansible_play_hosts }}"
+    nodes: "{{ ansible_play_hosts | join(',') }}"
+  run_once: true
 
 - name: Creamos la ubicacion del volumen
   file:
@@ -32,7 +33,7 @@
     cluster: "{{ ansible_play_hosts }}"
     force: yes
   run_once: true
-  
+
   
 - name: start gluster volume
   gluster.gluster.gluster_volume:
