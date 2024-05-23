@@ -106,7 +106,7 @@ resource "proxmox_lxc" "bd" {
 # -----------------------------------------------------------------------------------------------------------------------------------------
 #  Configuracion de los servidores GlusterFS
 resource "proxmox_lxc" "gfs" {
-  count           = 4                                                      
+  count           = 3                                                      
   target_node     = var.nodo01                                                                                      
   ssh_public_keys = var.key_public_ansible
   hostname        = "gfs-${count.index}"                                   

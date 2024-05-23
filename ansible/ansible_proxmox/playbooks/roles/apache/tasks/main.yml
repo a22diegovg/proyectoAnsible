@@ -1,18 +1,19 @@
 ---
 # tasks file for apache
-- name: Instalar Apache2.4
+- name: Instalacion Apache 2.4
   ansible.builtin.apt:
     name: apache2
     state: present
     update_cache: yes
 
-- name: Instalar php
+- name: Instalación de php para Apache 2.4
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
   loop:
   - libapache2-mod-php
   - php-mysqli
+  - php
   notify: reinicio_apache2
   
 #- name: Configurar tmpPrivateapache
@@ -20,6 +21,7 @@
 
 #- name: Refresacamos demonio
 #  command: systemctl daemon-reload
+
 - name: Copiar php.ini
   ansible.builtin.copy:
     src: php.ini
@@ -37,12 +39,12 @@
     src: index.php
     dest: /var/www/html/index.php
     
-- name: Comprobar si el sitio esta habilitado
+- name: Comprobación de habilitación del sitio
   stat:
     path: /etc/apache2/sites-enabled/sitio.conf
   register: sitio_habilitado
 
-- name: Habilitar sitio de apache2
+- name: Habilitación de sitio en Apache 2.4
   command: a2ensite sitio.conf
   notify: reinicio_apache2
   when: not sitio_habilitado.stat.exists

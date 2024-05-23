@@ -1,0 +1,6 @@
+---
+# handlers file for ntp
+- name: reinicio_ntp
+  ansible.builtin.service:
+    name: ntp
+    state: restarted

@@ -1,0 +1,13 @@
+---
+# tasks file for ntp
+- name: Instalar ntp
+  ansible.builtin.apt:
+    name: ntp
+    state: present
+  update_cache: yes
+    
+- name: Copiar archivo de configuración de ntp
+  ansible.builtin.copy:
+    src: ntp.conf
+    dest: /etc/ntp.conf
+  notify: reinicio_ntp

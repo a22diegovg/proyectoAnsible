@@ -1,6 +1,6 @@
 ---
 # tasks file for mariadb
-- name: Instalar Mariadb
+- name: Instalación de Mariadb
   ansible.builtin.apt:
     name: mariadb-server
     state: present

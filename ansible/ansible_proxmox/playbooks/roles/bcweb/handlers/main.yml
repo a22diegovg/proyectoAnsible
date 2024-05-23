@@ -1,6 +1,0 @@
----
-# handlers file for bcweb
-- name: reinicio_haproxy
-  ansible.builtin.service:
-    name: haproxy
-    state: restarted

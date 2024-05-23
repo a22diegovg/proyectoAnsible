@@ -1,45 +1,29 @@
 ---
-- name: Sincronizar la hora
+- name: Sincronización de la hora
   hosts: all
   remote_user: root
-  tasks:
-  - name: Instalar ntp
-    ansible.builtin.apt:
-      name: ntp
-      state: present
-    update_cache: yes
-      
-  - name: Configurar ntp
-    ansible.builtin.copy:
-      src: ntp.conf
-      dest: /etc/ntp.conf
-    notify: reinicio_ntp
+  roles:
+    - ntp
 
-  handlers:
-    - name: reinicio_ntp
-      ansible.builtin.service:
-        name: ntp
-        state: restarted
-
-- name: Configurar servidores web
+- name: Configuracion de servidores web (apache 2.4)
   hosts: ipsWEB
   remote_user: root
   roles:
     - apache
 
-- name: Configurar balanceador web
+- name: Configuración de servidor de balanceo de carga para los servidores web (apache 2.4)
   hosts: ipsbcw
   remote_user: root
   roles:
     - haproxy
 
-- name: Configurar bases de datos
+- name: Configuración de las bases de datos (maridb) - Sin galera cluster
   hosts: ipsBD
   remote_user: root
   roles:
     - mariadb
 
-- name: Configurar balanceador de bases de datos
+- name: Configuración del balanceador de base de datos (mariadb) y de sistema de archivos compartido (glusterfs)
   remote_user: root
   hosts: ipsbcbd
   vars:
@@ -52,7 +36,7 @@
   roles:
     - haproxy
 
-- name: Configurar GlusterFS
+- name: Configuración de sistema de archivos compartido (glusterfs)
   hosts: ipsGFS
   remote_user: root
   roles:

@@ -1,6 +1,6 @@
 ---
 # tasks file for glusterfs
-- name: Instalamos glusterfs
+- name: Instalación glusterfs
   apt:
     name: glusterfs-server
     state: present
@@ -12,31 +12,35 @@
     state: started
     enabled: true
 
-- name: Creamos el grupo de confianza
+- name: Creación de grupo de confianza
   gluster.gluster.gluster_peer:
     state: present
     nodes: "{{ ansible_play_hosts | join(',') }}"
   run_once: true
 
-- name: Creamos la ubicacion del volumen
+- name: Creación de ubicacion del volumen
   file:
-    path: /gfs/brick1
+    path: /gfs/brick_web
     state: directory
     recurse: yes
 
-- name: Creamos un volumen gluster
+- name: Creación un volumen gluster
   gluster.gluster.gluster_volume:
     state: present
-    name: vol_gfs
-    bricks: /gfs/brick1
+    name: vol_web
+    bricks: /gfs/brick_web
     replicas: "{{ ansible_play_hosts | length }}"
     cluster: "{{ ansible_play_hosts }}"
     force: yes
   run_once: true
 
-  
 - name: start gluster volume
   gluster.gluster.gluster_volume:
     state: started
-    name: vol_gfs
+    name: vol_web
+
+- name: Copiar contenido web
+  ansible.builtin.copy:
+    src: index.php
+    dest: /gfs/brick_web
 

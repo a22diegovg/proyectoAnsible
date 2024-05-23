@@ -1,12 +1,12 @@
 - name: Cliente Gluster
-  hosts: ipsGFS ipsBD
+  hosts: ipsWEB
   tasks:
-    - name: Instalar fuse y habilitarlo
+    - name: Instalación fuse 
       apt:
         name: fuse
         state: present
 
-    - name: Instalar cliente gluster
+    - name: Instalación cliente gluster
       apt:
         name: glusterfs-client
         state: present
@@ -20,14 +20,14 @@
     #     state: present
     #   ignore_errors: yes
 
-    - name: Crear carpeta de montaje
+    - name: Creación de carpeta de montaje
       file:
-        path: /mnt/gluster
+        path: /mnt/web
         state: directory
 
-    - name: Montar el FS
+    - name: Montaje el FS
       mount:
-        path: /mnt/gluster
-        src: 10.0.1.200:/vol_gfs
+        path: /mnt/web
+        src: 10.0.1.200:/vol_web
         fstype: glusterfs
         state: mounted
