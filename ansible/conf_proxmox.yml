@@ -1,4 +1,4 @@
-- name:
+- name: Configurar Proxmox
   hosts: proxmox
   remote_user: root
   vars:
