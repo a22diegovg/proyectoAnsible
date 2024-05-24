@@ -34,10 +34,10 @@
     dest: /etc/apache2/sites-available/sitio.conf
   notify: reinicio_apache2
 
-- name: Copiar contenido web
-  ansible.builtin.copy:
-    src: index.php
-    dest: /var/www/html/index.php
+#- name: Copiar contenido web
+#  ansible.builtin.copy:
+#    src: index.php
+#    dest: /var/www/html/index.php
     
 - name: Comprobación de habilitación del sitio
   stat:
