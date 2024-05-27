@@ -7,14 +7,14 @@
     update_cache: yes
 
     ##  Hay que crear un usuario para las peticiones web
-- name: Creamos usuario
-      mysql_user:
-        name: ansible
-        password: apache
-        state: present
-        login_user: root
-        login_password: abc123.
-      run_once: true
+#- name: Creamos usuario
+#      mysql_user:
+#        name: ansible
+#        password: apache
+#        state: present
+#        login_user: root
+#        login_password: abc123.
+#      run_once: true
 # - name: parada_mariadb
 #   ansible.builtin.service:
 #     name: mariadb
