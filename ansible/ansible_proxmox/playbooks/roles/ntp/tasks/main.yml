@@ -4,7 +4,7 @@
   ansible.builtin.apt:
     name: ntp
     state: present
-  update_cache: yes
+    update_cache: yes
     
 - name: Copiar archivo de configuración de ntp
   ansible.builtin.copy:
