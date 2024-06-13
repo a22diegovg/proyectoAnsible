@@ -6,6 +6,8 @@
     state: present
     update_cache: yes
 
+
+
     ##  Hay que crear un usuario para las peticiones web
 #- name: Creamos usuario
 #      mysql_user:

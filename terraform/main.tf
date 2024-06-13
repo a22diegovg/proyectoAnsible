@@ -28,7 +28,7 @@ resource "proxmox_lxc" "web" {
 # -----------------------------------------------------------------------------------------------------------------------------------------
 #  Configuración del balanceador de carga web
 resource "proxmox_lxc" "balanceadorWEB" {
-  count           = 1 
+  count           = 1
   target_node     = var.nodo01 
   ssh_public_keys = var.key_public_ansible 
   hostname        = "bcw-${count.index}" 

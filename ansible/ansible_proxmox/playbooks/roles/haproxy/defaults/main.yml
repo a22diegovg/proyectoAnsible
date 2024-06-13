@@ -3,4 +3,6 @@
 puerto1: 80
 modo: http
 grupo1: ipsWEB
+servicio: web
+app: clusterWEB
 

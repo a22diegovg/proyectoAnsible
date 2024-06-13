@@ -27,6 +27,8 @@
   remote_user: root
   hosts: ipsbcbd
   vars:
+    servicio: bd
+    app: clusterBD
     puerto1: 3306
     grupo1: ipsBD
     puerto2: 24007
